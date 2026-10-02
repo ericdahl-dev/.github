@@ -1,0 +1,29 @@
+name: American spelling
+
+# Org-wide check, required through the org ruleset: fails a PR whose repo contains British
+# spellings (colour, centre, cancelled, analyse...). The checker lives in this repo, so every
+# repo gets the same version; each repo can allow words or skip paths in .american-spelling-allow.
+on:
+  pull_request:
+  merge_group:
+
+permissions:
+  contents: read
+
+jobs:
+  spelling:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out the repo being checked
+        uses: actions/checkout@v7
+      - name: Check out the checker
+        uses: actions/checkout@v7
+        with:
+          repository: ericdahl-dev/.github
+          path: .american-spelling-checker
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Check spelling
+        run: python .american-spelling-checker/scripts/american_spelling.py .

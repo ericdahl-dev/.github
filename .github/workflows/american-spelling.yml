@@ -13,7 +13,8 @@ permissions:
 
 jobs:
   spelling:
-    runs-on: ubuntu-latest
+    # Private repos run on the org's ger3 runners (no hosted minutes); public repos can't use them.
+    runs-on: ${{ github.event.repository.private && fromJSON('["self-hosted","ger3"]') || 'ubuntu-latest' }}
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v7
